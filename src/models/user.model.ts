@@ -9,7 +9,7 @@ export enum UserType {
 export interface User extends Document {
   fullName: string;
   username: string;
-  phoneNumber: string;
+  email: string;
   isVerified: boolean;
   verificationCode: string;
   verificationCodeExpiry: Date;
@@ -45,12 +45,12 @@ const userSchema = new Schema<User>(
       minlength: 8,
       maxlength: 1024,
     },
-    phoneNumber: {
+    email: {
       type: String,
       required: true,
       unique: true,
-      maxlength: 10,
-      match: /^[0-9]{10}$/,
+      maxlength: 50,
+      match: [/^.+\@.+\..+$/, "Please use a valid email"],
     },
     isVerified: {
       type: Boolean,
