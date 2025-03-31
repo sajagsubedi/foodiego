@@ -1,6 +1,12 @@
 import mongoose, { Document, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
-import { UserRole } from "@/types/next";
+
+export enum UserRole {
+  USER = "USER",
+  ADMIN = "ADMIN",
+  RIDER = "RIDER",
+  SUPER_ADMIN = "SUPER_ADMIN",
+}
 
 export interface User extends Document {
   fullName: string;

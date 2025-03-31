@@ -2,7 +2,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { NextAuthOptions } from "next-auth";
 import { ZodError } from "zod";
 import { signInSchema } from "@/schemas/signInSchema";
-import UserModel, { User } from "../models/user.model";
+import UserModel from "@/models/user.model";
 import connectDb from "./connectDb";
 import { UserRole } from "@/types/next";
 
