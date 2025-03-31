@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 export const POST = async (request: Request) => {
   await connectDb();
   try {
+    console.log("Verifying email...");
     const { username, verificationCode } = await request.json();
     const decodedUsername = decodeURIComponent(username);
     const user = await UserModel.findOne({ username: decodedUsername });

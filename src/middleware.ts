@@ -10,6 +10,10 @@ export default withAuth(
       authorized({ token, req }) {
         const { pathname } = req.nextUrl;
 
+        if (pathname == "/") {
+          return true;
+        }
+
         if (
           pathname.startsWith("/api/auth") ||
           pathname.startsWith("/signin") ||
