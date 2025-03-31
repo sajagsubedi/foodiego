@@ -1,11 +1,7 @@
 import mongoose, { Document, Schema } from "mongoose";
+import bcrypt from "bcryptjs";
+import { UserRole } from "@/types/next";
 
-export enum UserType {
-  USER = "USER",
-  ADMIN = "ADMIN",
-  RIDER = "RIDER",
-  SUPER_ADMIN = "SUPER_ADMIN",
-}
 export interface User extends Document {
   fullName: string;
   username: string;
@@ -13,12 +9,9 @@ export interface User extends Document {
   isVerified: boolean;
   verificationCode: string;
   verificationCodeExpiry: Date;
-  profilePicture: {
-    public_id: string;
-    url: string;
-  };
-  userType: UserType;
+  userRole: UserRole;
   password: string;
+  isPasswordCorrect: (password: string) => Promise<boolean>;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -52,6 +45,12 @@ const userSchema = new Schema<User>(
       maxlength: 50,
       match: [/^.+\@.+\..+$/, "Please use a valid email"],
     },
+    userRole: {
+      type: String,
+      required: true,
+      enum: Object.values(UserRole),
+      default: UserRole.USER,
+    },
     isVerified: {
       type: Boolean,
       default: false,
@@ -67,6 +66,18 @@ const userSchema = new Schema<User>(
   },
   { timestamps: true }
 );
+
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
+
+userSchema.methods.isPasswordCorrect = async function (
+  password: string
+): Promise<boolean> {
+  return await bcrypt.compare(password, this.password);
+};
 
 const UserModel =
   (mongoose.models.User as mongoose.Model<User>) ||
