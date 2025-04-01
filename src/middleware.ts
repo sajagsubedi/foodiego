@@ -17,7 +17,8 @@ export default withAuth(
         if (
           pathname.startsWith("/api/auth") ||
           pathname.startsWith("/signin") ||
-          pathname.startsWith("/signup")
+          pathname.startsWith("/signup") ||
+          pathname.startsWith("/verify")
         ) {
           return true;
         }

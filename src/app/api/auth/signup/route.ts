@@ -77,6 +77,7 @@ export const POST = async (request: Request) => {
         username,
         password: password,
         email,
+        fullName,
         isVerified: false,
         isAcceptingMesages: true,
         verificationCode,
