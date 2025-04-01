@@ -30,6 +30,7 @@ export const authOptions: NextAuthOptions = {
 
           const existingUser = await UserModel.findOne({
             $or: [{ email: identifier }, { username: identifier }],
+            isVerified: true,
           });
 
           if (!existingUser) {

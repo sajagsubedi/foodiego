@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { useDebounceValue } from "usehooks-ts";
 import { ApiResponse } from "@/types/ApiResponse";
 import axios, { AxiosError } from "axios";
-import { RiLoader2Fill } from "react-icons/ri";
+
 
 export default function Page() {
   const {
@@ -31,7 +31,7 @@ export default function Page() {
   const [username, setUsername] = useState("");
   const [usernameMessage, setUsernameMessage] = useState(""); //message from api on checking username validation
   const [isCheckingUsername, setIsCheckingUsername] = useState(false); //for showing loader below username input
-  const [debouncedUsername, setDebouncedUsername] = useDebounceValue(
+  const [debouncedUsername] = useDebounceValue(
     username,
     300
   );
@@ -61,7 +61,7 @@ export default function Page() {
   const [email, setEmail] = useState("");
   const [emailMessage, setEmailMessage] = useState(""); //message from api on checking email validation
   const [isCheckingEmail, setIsCheckingEmail] = useState(false); //for showing loader below email input
-  const [debouncedEmail, setDebouncedEmail] = useDebounceValue(email, 300);
+  const [debouncedEmail] = useDebounceValue(email, 300);
   useEffect(() => {
     const checkEmailUnique = async () => {
       if (debouncedEmail) {
@@ -142,7 +142,7 @@ export default function Page() {
               placeholder="johndoe"
               className="w-full bg-white rounded border border-gray-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
             />
-            {isCheckingUsername && <RiLoader2Fill className="animate-spin" />}
+            {isCheckingUsername && <AiOutlineLoading3Quarters className="animate-spin" />}
             {!isCheckingUsername && usernameMessage && (
               <p
                 className={`text-sm ${
@@ -170,7 +170,7 @@ export default function Page() {
               placeholder="johndoe@example.com"
               className="w-full bg-white rounded border border-gray-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
             />
-            {isCheckingEmail && <RiLoader2Fill className="animate-spin" />}
+            {isCheckingEmail && <AiOutlineLoading3Quarters className="animate-spin" />}
             {!isCheckingEmail && emailMessage && (
               <p
                 className={`text-sm ${

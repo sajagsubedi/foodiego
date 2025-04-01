@@ -1,6 +1,6 @@
 import UserModel from "@/models/user.model";
 import connectDb from "@/lib/connectDb";
-// import { sendVerificationEmail } from "@/helpers/sendVerificationEmail";
+import { sendVerificationEmail } from "@/helpers/sendVerificationEmail";  
 import { NextResponse } from "next/server";
 
 export const POST = async (request: Request) => {
@@ -86,21 +86,21 @@ export const POST = async (request: Request) => {
       await newUser.save();
     }
 
-    // // Send a verification email to the user
-    // const emailResponse = await sendVerificationEmail(
-    //   email,
-    //   username,
-    //   verificationCode
-    // );
-    // if (!emailResponse.success) {
-    //   return NextResponse.json(
-    //     {
-    //       success: false,
-    //       message: emailResponse.message,
-    //     },
-    //     { status: 500 }
-    //   );
-    // }
+    // Send a verification email to the user
+    const emailResponse = await sendVerificationEmail(
+      email,
+      username,
+      verificationCode
+    );
+    if (!emailResponse.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: emailResponse.message,
+        },
+        { status: 500 }
+      );
+    }
 
     // Return a success response
     return NextResponse.json(
