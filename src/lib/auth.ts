@@ -1,5 +1,5 @@
 import CredentialsProvider from "next-auth/providers/credentials";
-import { NextAuthOptions } from "next-auth";
+import { NextAuthOptions, User } from "next-auth";
 import { ZodError } from "zod";
 import { signInSchema } from "@/schemas/signInSchema";
 import UserModel from "@/models/user.model";
@@ -21,7 +21,7 @@ export const authOptions: NextAuthOptions = {
           type: "password",
         },
       },
-      async authorize(credentials: any): Promise<any> {
+      async authorize(credentials) {
         await connectDb();
         try {
           const { identifier, password } = await signInSchema.parseAsync(
@@ -44,13 +44,14 @@ export const authOptions: NextAuthOptions = {
             throw new Error("Invalid credentials.");
           }
 
-          return existingUser || null;
+          return existingUser as User; // Return the user object if authentication is successful
         } catch (error) {
           if (error instanceof ZodError) {
             // Return `null` to indicate that the credentials are invalid
             return null;
           }
         }
+        return null; // Explicitly return null if no user is found or an error occurs
       },
     }),
   ],
