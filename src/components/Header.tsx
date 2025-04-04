@@ -39,7 +39,7 @@ export default function Header() {
       <nav className="bg-white flex items-center justify-between px-4 py-1 box-border gap-4 sticky top-0  h-20 z-[99] md:px-[5vw] shadow-md shadow-rose-100">
         <Link className="flex" href="/">
           <Image
-            src="/logo.png"
+            src="/assets/logo.png"
             className="h-9 w-auto"
             alt="logo"
             width={3000}

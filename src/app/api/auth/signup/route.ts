@@ -1,12 +1,13 @@
 import UserModel from "@/models/user.model";
 import connectDb from "@/lib/connectDb";
-import { sendVerificationEmail } from "@/helpers/sendVerificationEmail";  
+import { sendVerificationEmail } from "@/helpers/sendVerificationEmail";
 import { NextResponse } from "next/server";
 
 export const POST = async (request: Request) => {
   // Connect to the database
   await connectDb();
   try {
+    let newUser = null;
     const reqBody = await request.json();
 
     // Get the username, password, and email from the request body
@@ -63,17 +64,18 @@ export const POST = async (request: Request) => {
         );
       } else {
         // If the user with the same email exists but is not verified, update the user's information
-        const verificationCodeExpiry = new Date(Date.now() + 3600000);
+        const verificationCodeExpiry = new Date(Date.now() + 600000); // 10 minutes
         existingUserWithEmail.password = password;
         existingUserWithEmail.verificationCode = verificationCode;
         existingUserWithEmail.username = username;
         existingUserWithEmail.verificationCodeExpiry = verificationCodeExpiry;
         await existingUserWithEmail.save();
+        newUser = existingUserWithEmail;
       }
     } else {
       // If the user with the same email does not exist, create a new user
-      const verificationCodeExpiry = new Date(Date.now() + 3600000);
-      const newUser = new UserModel({
+      const verificationCodeExpiry = new Date(Date.now() + 600000); // 10 minutes
+      newUser = new UserModel({
         username,
         password: password,
         email,
@@ -86,12 +88,15 @@ export const POST = async (request: Request) => {
       await newUser.save();
     }
 
+    console.log("New user created:", newUser);
     // Send a verification email to the user
-    const emailResponse = await sendVerificationEmail(
+    const emailResponse = await sendVerificationEmail({
       email,
       username,
-      verificationCode
-    );
+      verificationCode,
+      verificationCodeExpiry: newUser?.verificationCodeExpiry,
+    });
+
     if (!emailResponse.success) {
       return NextResponse.json(
         {
@@ -101,6 +106,7 @@ export const POST = async (request: Request) => {
         { status: 500 }
       );
     }
+    console.log("Email sent successfully:", emailResponse.message);
 
     // Return a success response
     return NextResponse.json(
@@ -111,7 +117,8 @@ export const POST = async (request: Request) => {
       { status: 201 }
     );
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
+    const errorMessage =
+      error instanceof Error ? error.message : "An unknown error occurred";
     return NextResponse.json(
       {
         success: false,

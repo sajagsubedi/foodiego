@@ -9,7 +9,7 @@ const HeroSection = () => {
           className="absolute inset-0 blur-xl h-[580px]"
           style={{
             background:
-              "linear-gradient(143.6deg, rgba(255, 102, 132, 0) 20.79%, rgba(249, 72, 121, 0.26) 40.92%, rgba(238, 102, 171, 0) 70.35%);",
+              "linear-gradient(143.6deg, rgba(255, 102, 132, 0) 20.79%, rgba(249, 72, 121, 0.26) 40.92%, rgba(238, 102, 171, 0) 70.35%)",
           }}
         ></div>
       </div>
@@ -33,7 +33,13 @@ const HeroSection = () => {
           </div>
         </div>
         <div className="w-1/2 flex justify-center items-center">
-        <Image alt="bannner" src="/banner.png" height={3000} width={3000} className="max-w-96"/>
+          <Image
+            alt="bannner"
+            src="/assets/banner.png"
+            height={3000}
+            width={3000}
+            className="max-w-96"
+          />
         </div>
       </section>
     </>

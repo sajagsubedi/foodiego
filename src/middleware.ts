@@ -23,6 +23,10 @@ export default withAuth(
           return true;
         }
 
+        if (pathname.startsWith("/assets")) {
+          return true;
+        }
+
         return !!token;
       },
     },
