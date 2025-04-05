@@ -4,14 +4,13 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUpSchema } from "@/schemas/signUpSchema";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { LoaderCircle } from "lucide-react";
 import { toast } from "react-toastify";
 import { z } from "zod";
 import { useEffect, useState } from "react";
 import { useDebounceValue } from "usehooks-ts";
 import { ApiResponse } from "@/types/ApiResponse";
 import axios, { AxiosError } from "axios";
-
 
 export default function Page() {
   const {
@@ -31,10 +30,7 @@ export default function Page() {
   const [username, setUsername] = useState("");
   const [usernameMessage, setUsernameMessage] = useState(""); //message from api on checking username validation
   const [isCheckingUsername, setIsCheckingUsername] = useState(false); //for showing loader below username input
-  const [debouncedUsername] = useDebounceValue(
-    username,
-    300
-  );
+  const [debouncedUsername] = useDebounceValue(username, 300);
   useEffect(() => {
     const checkUserNameUnique = async () => {
       if (debouncedUsername) {
@@ -142,7 +138,7 @@ export default function Page() {
               placeholder="johndoe"
               className="w-full bg-white rounded border border-gray-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
             />
-            {isCheckingUsername && <AiOutlineLoading3Quarters className="animate-spin" />}
+            {isCheckingUsername && <LoaderCircle className="animate-spin" />}
             {!isCheckingUsername && usernameMessage && (
               <p
                 className={`text-sm ${
@@ -170,7 +166,7 @@ export default function Page() {
               placeholder="johndoe@example.com"
               className="w-full bg-white rounded border border-gray-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
             />
-            {isCheckingEmail && <AiOutlineLoading3Quarters className="animate-spin" />}
+            {isCheckingEmail && <LoaderCircle className="animate-spin" />}
             {!isCheckingEmail && emailMessage && (
               <p
                 className={`text-sm ${
@@ -205,9 +201,7 @@ export default function Page() {
             className="text-white bg-rose-600 border-0 py-2 px-6 mt-5 gap-2 focus:outline-none w-full hover:bg-rose-700 rounded text- flex items-center justify-center"
             disabled={isSubmitting}
           >
-            {isSubmitting && (
-              <AiOutlineLoading3Quarters className="animate-spin text-lg" />
-            )}
+            {isSubmitting && <LoaderCircle className="animate-spin text-lg" />}
             Signup
           </button>
         </form>

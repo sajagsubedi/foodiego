@@ -1,8 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { MdOutlineSort } from "react-icons/md";
-import { IoClose } from "react-icons/io5";
+import { X ,Ellipsis} from "lucide-react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 
@@ -57,7 +56,7 @@ export default function Header() {
                 className="text-2xl p-3 text-gray-400"
                 onClick={() => setNavActive(false)}
               >
-                <IoClose />
+                <X />
               </button>
             </div>
             <NavLink route="/">Home</NavLink>
@@ -87,7 +86,7 @@ export default function Header() {
             setNavActive(true);
           }}
         >
-          <MdOutlineSort />
+          <Ellipsis />
         </button>
       </nav>
     </>

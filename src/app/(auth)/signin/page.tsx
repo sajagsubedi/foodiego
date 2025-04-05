@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInSchema } from "@/schemas/signInSchema";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { LoaderCircle } from "lucide-react";
 import { toast } from "react-toastify";
 import { z } from "zod";
 
@@ -85,7 +85,7 @@ export default function Page() {
             disabled={isSubmitting}
           >
             {isSubmitting && (
-              <AiOutlineLoading3Quarters className="animate-spin text-lg" />
+              <LoaderCircle className="animate-spin text-lg" />
             )}
             Signin
           </button>

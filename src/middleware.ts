@@ -10,7 +10,7 @@ export default withAuth(
       authorized({ token, req }) {
         const { pathname } = req.nextUrl;
 
-        if (pathname == "/") {
+        if (pathname == "/" || pathname.startsWith("/menu")) {
           return true;
         }
 

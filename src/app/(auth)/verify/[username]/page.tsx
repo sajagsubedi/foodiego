@@ -4,7 +4,7 @@ import React, { useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { LoaderCircle } from "lucide-react";
 
 
 export default function Page() {
@@ -15,7 +15,7 @@ export default function Page() {
   const inputRefs = useRef<(HTMLInputElement | null)[]>(Array(6).fill(null));
 
   const handleChange = (index: number, value: string) => {
-    if (!/^\d?$/.test(value)) return; // Allow only digits (0-9)
+    if (!/^\d?$/.test(value)) return; // Allow only digits (0-9) 
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
@@ -92,7 +92,7 @@ export default function Page() {
             className="w-full bg-rose-500 text-white py-2 rounded hover:bg-rose-600 flex justify-center items-center"
             disabled={isSubmitting}
           >
-            {isSubmitting && <AiOutlineLoading3Quarters className="animate-spin mr-2" />}Verify
+            {isSubmitting && <LoaderCircle className="animate-spin mr-2" />}Verify
             Code
           </button>
         </form>
