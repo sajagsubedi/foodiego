@@ -146,14 +146,14 @@ const PopularFoodItems: React.FC = () => {
                 </span>
               </div>
               <p className="text-gray-600 mb-4 text-nowrap">
-                {truncateDescription(item.description, 40)}{" "}
+                {truncateDescription(item.description, 40)}
               </p>
               <div className="flex justify-center gap-2 items-center">
                 <p className="text-gray-600 font-semibold line-through h-full text-lg flex items-center justify-center">
-                  {item.fakedPrice && `$${item.fakedPrice.toFixed(2)}`}
+                  {item.fakedPrice && `Rs${item.fakedPrice.toFixed(2)}`}
                 </p>
                 <h4 className="font-bold text-2xl text-rose-700">
-                  ${item.price.toFixed(2)}
+                  Rs{item.price.toFixed(2)}
                 </h4>
               </div>
             </div>
