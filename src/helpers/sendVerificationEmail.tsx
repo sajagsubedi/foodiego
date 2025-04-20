@@ -1,12 +1,10 @@
 import nodemailer from "nodemailer";
 
-
 // Load environment variables from .env file
 const EMAIL_USER = process.env.EMAIL_USER;
 const EMAIL_PASS = process.env.EMAIL_PASS;
 const EMAIL_HOST = process.env.EMAIL_HOST;
 const EMAIL_PORT = process.env.EMAIL_PORT;
-
 
 export const sendVerificationEmail = async (data: {
   username: string;
@@ -50,13 +48,13 @@ export const sendVerificationEmail = async (data: {
     `;
 
     // Send email
-    await transporter.sendMail({
-      from: `foodieg.vercel.app`,
+    const result = await transporter.sendMail({
+      from: `Foodiego <${EMAIL_USER}>`,
       to: data.email,
       subject: "Verify Your Email - Foodiego",
       html: emailHtml,
     });
-
+    console.log(result);
     return { success: true, message: "Verification email sent." };
   } catch (error) {
     console.error("Error sending email:", error);
