@@ -1,0 +1,32 @@
+import mongoose, { Document } from "mongoose";
+
+export interface FoodType extends Document {
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  imageUrl: string;
+  markedPrice?: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const FoodSchema = new mongoose.Schema<FoodType>(
+  {
+    name: { type: String, required: true },
+    description: { type: String, required: true },
+    price: { type: Number, required: true },
+    category: { type: String, required: true },
+    imageUrl: { type: String, required: true },
+    markedPrice: { type: Number, required: false },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const FoodModel =
+  (mongoose.models.Food as mongoose.Model<FoodType>) ||
+  mongoose.model("Food", FoodSchema);
+
+export default FoodModel;

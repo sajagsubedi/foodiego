@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="body-font bg-gray-100 min-h-80 flex flex-col justify-between">
+    <footer className="body-font bg-gray-100 min-h-80 flex flex-col justify-between mt-20">
       <div className="flex flex-col items-center gap-5 md:flex-row">
         <div className="px-10 py-3 flex items-start flex-col md:w-1/2 gap-5 ">
           <div className="flex flex-col items-center">
@@ -14,7 +14,7 @@ export default function Footer() {
             >
               <Image
                 src="/assets/logo.png"
-                className="w-80 md:w-[300px] shadow-3xl shadow-gray-100"
+                className="w-60 md:w-[300px] shadow-3xl shadow-gray-100"
                 alt="logo"
                 width={100}
                 height={100}

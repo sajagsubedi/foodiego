@@ -1,10 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { X, Menu } from "lucide-react";
+import { X, Menu, ShoppingCart } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import UserDropDown from "./UserDropDown";
+import CartModal from "./CartModal";
 import { useSession } from "next-auth/react";
 
 type NavLinkPropType = {
@@ -35,10 +36,18 @@ export default function Header() {
   const [userDropDown, setUserDropDown] = useState(false);
   const { data: session, status } = useSession();
 
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
   const changeUserDropDown = (value: boolean) => {
     setUserDropDown(value);
   };
 
+  const openCart = () => {
+    setIsCartOpen(true);
+  };
+  const closeCart = () => {
+    setIsCartOpen(false);
+  };
   return (
     <nav className="bg-white flex items-center justify-between px-4 py-1 box-border gap-4 sticky top-0 h-20 z-[99] border-b-4 border-rose-500 md:px-[5vw]">
       <Link className="flex" href="/">
@@ -66,9 +75,9 @@ export default function Header() {
             </button>
           </div>
           <NavLink route="/">Home</NavLink>
+          <NavLink route="/about">About</NavLink>
           <NavLink route="/menu">Menu</NavLink>
-          <NavLink route="/services">Services</NavLink>
-          <NavLink route="/products">Products</NavLink>
+          <NavLink route="/orders">Orders</NavLink>
           <NavLink route="/contact">Contact Us</NavLink>
         </ul>
 
@@ -91,6 +100,10 @@ export default function Header() {
       </div>
 
       <div className="flex items-center gap-1">
+        <button className="text-black bg-rose-200 rounded-full p-2 mr-1">
+          <ShoppingCart onClick={openCart} />
+        </button>
+
         {status == "authenticated" && (
           <UserDropDown
             userDropDown={userDropDown}
@@ -105,6 +118,8 @@ export default function Header() {
           <Menu />
         </button>
       </div>
+      
+      <CartModal cartState={isCartOpen} closeCart={closeCart} />
     </nav>
   );
 }
