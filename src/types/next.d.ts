@@ -2,9 +2,9 @@ import "next-auth";
 
 export enum UserRole {
   USER = "USER",
-  ADMIN = "ADMIN",
+  STAFF = "STAFF",
   RIDER = "RIDER",
-  SUPER_ADMIN = "SUPER_ADMIN",
+  ADMIN = "ADMIN",
 }
 
 declare module "next-auth" {
