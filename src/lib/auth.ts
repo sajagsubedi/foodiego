@@ -59,6 +59,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token._id = user._id?.toString();
+        token.profilePicture = user.profilePicture;
         token.username = user.username;
         token.isVerified = user.isVerified;
         token.userRole = user.userRole as UserRole;
@@ -68,6 +69,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (token) {
         session.user._id = token._id as string;
+        session.user.profilePicture = token.profilePicture;
         session.user.username = token.username as string;
         session.user.isVerified = token.isVerified as boolean;
         session.user.userRole = token.userRole as UserRole;

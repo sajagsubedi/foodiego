@@ -32,11 +32,11 @@ export const GET = async (request: Request) => {
     }
     const { email } = result?.data;
 
-    const existingVerifiedUser = await UserModel.findOne({
+    const existingUser = await UserModel.findOne({
       email,
-      isVerified: true,
     });
-    if (existingVerifiedUser) {
+
+    if (existingUser?.isVerified) {
       return NextResponse.json(
         {
           success: false,

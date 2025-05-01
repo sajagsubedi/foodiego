@@ -3,6 +3,7 @@
 import { User } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 
 interface UserDropDownProps {
   userDropDown: boolean;
@@ -23,8 +24,8 @@ const UserDropDown = ({
         onClick={() => changeUserDropDown(!userDropDown)}
       >
         <Image
-          className="w-8 h-8 rounded-full"
-          src="/assets/user.png"
+          className="w-8 h-8 rounded-full shadow-sm"
+          src={user?.profilePicture?.url || "asssets/user.png"}
           alt="user photo"
           width={32}
           height={32}
@@ -71,7 +72,10 @@ const UserDropDown = ({
             </Link>
           </li>
           <li>
-            <button className="block px-4 py-2 text-sm w-full text-start text-gray-700 hover:bg-gray-100 truncate">
+            <button
+              className="block px-4 py-2 text-sm w-full text-start text-gray-700 hover:bg-gray-100 truncate"
+              onClick={() => signOut()}
+            >
               Sign out
             </button>
           </li>

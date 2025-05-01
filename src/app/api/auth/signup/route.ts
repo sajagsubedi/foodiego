@@ -2,16 +2,34 @@ import UserModel from "@/models/user.model";
 import connectDb from "@/lib/connectDb";
 import { sendVerificationEmail } from "@/helpers/sendVerificationEmail";
 import { NextResponse } from "next/server";
+import imagekit from "@/lib/imagekit";
 
 export const POST = async (request: Request) => {
   // Connect to the database
   await connectDb();
   try {
     let newUser = null;
-    const reqBody = await request.json();
 
-    // Get the username, password, and email from the request body
-    const { fullName, email, username, password } = reqBody;
+    const formData = await request.formData();
+
+    // Get the fullName, username, password, email and profile picture from the formdata
+
+    const fullName = formData.get("fullName") as string;
+    const username = formData.get("username") as string;
+    const password = formData.get("password") as string;
+    const email = formData.get("email") as string;
+    const profilePicture = formData.get("profilePicture") as File | null;
+
+    // Check if the profile picture is provided and is a valid file type
+    if (profilePicture && !profilePicture.type.startsWith("image/")) {
+      return NextResponse.json(
+        { success: false, message: "Invalid file type for profile picture" },
+        {
+          status: 400,
+        }
+      );
+    }
+
     // Check if all fields are provided
     if (
       [fullName, email, username, password].some(
@@ -25,26 +43,41 @@ export const POST = async (request: Request) => {
         }
       );
     }
+
     // Check if a user with the same username already exists
     const existingUserWithUsername = await UserModel.findOne({
       username,
-      isVerified: true,
     });
 
     if (existingUserWithUsername) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "User with username already exists",
-        },
-        {
-          status: 400,
-        }
-      );
+      if (existingUserWithUsername.isVerified) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "User with username already exists",
+          },
+          {
+            status: 400,
+          }
+        );
+      }
+
+      if (existingUserWithUsername.email != email) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Username is associated with a different email!",
+          },
+          {
+            status: 400,
+          }
+        );
+      }
     }
 
     // Check if a user with the same email already exists
     const existingUserWithEmail = await UserModel.findOne({ email });
+
     // Generate a random verification code
     const verificationCode = Math.floor(
       100000 + Math.random() * 900000
@@ -69,7 +102,6 @@ export const POST = async (request: Request) => {
         existingUserWithEmail.verificationCode = verificationCode;
         existingUserWithEmail.username = username;
         existingUserWithEmail.verificationCodeExpiry = verificationCodeExpiry;
-        await existingUserWithEmail.save();
         newUser = existingUserWithEmail;
       }
     } else {
@@ -85,10 +117,30 @@ export const POST = async (request: Request) => {
         verificationCode,
         verificationCodeExpiry,
       });
-      await newUser.save();
     }
 
-    console.log("New user created:", newUser);
+    //upload the profile picture
+    if (profilePicture) {
+      if (newUser?.profilePicture && newUser.profilePicture.fileId) {
+        await imagekit.deleteFile(newUser.profilePicture.fileId);
+      }
+      const bytes = await profilePicture.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+
+      const uploadedprofilePicture = await imagekit.upload({
+        file: buffer,
+        fileName: `${username}-profile-picture-${Date.now()}`,
+        folder: "/profile-pictures",
+      });
+      newUser.profilePicture = {
+        url: uploadedprofilePicture.url,
+        fileId: uploadedprofilePicture.fileId,
+      };
+    }
+
+    // Save the user (new or updated)
+    await newUser.save();
+
     // Send a verification email to the user
     const emailResponse = await sendVerificationEmail({
       email,
@@ -117,6 +169,7 @@ export const POST = async (request: Request) => {
       { status: 201 }
     );
   } catch (error: unknown) {
+    console.log(error);
     const errorMessage =
       error instanceof Error ? error.message : "An unknown error occurred";
     return NextResponse.json(

@@ -9,6 +9,10 @@ export enum UserRole {
 }
 
 export interface User extends Document {
+  profilePicture: {
+    url: string;
+    fileId: string;
+  };
   fullName: string;
   username: string;
   email: string;
@@ -24,6 +28,16 @@ export interface User extends Document {
 
 const userSchema = new Schema<User>(
   {
+    profilePicture: {
+      url: {
+        type: String,
+        required: true,
+      },
+      fileId: {
+        type: String,
+        required: true,
+      },
+    },
     fullName: {
       type: String,
       required: true,
