@@ -34,7 +34,7 @@ export default function Page() {
     if (result?.error) {
       toast.error("Invalid credentials");
     } else {
-      router.push("/dashboard");
+      router.push("/");
     }
   };
 
@@ -84,9 +84,7 @@ export default function Page() {
             className="text-white bg-rose-600 border-0 py-2 px-6 mt-5 gap-2 focus:outline-none w-full hover:bg-rose-700 rounded text- flex items-center justify-center"
             disabled={isSubmitting}
           >
-            {isSubmitting && (
-              <LoaderCircle className="animate-spin text-lg" />
-            )}
+            {isSubmitting && <LoaderCircle className="animate-spin text-lg" />}
             Signin
           </button>
         </form>

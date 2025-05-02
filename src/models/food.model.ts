@@ -4,7 +4,7 @@ export interface FoodType extends Document {
   name: string;
   description: string;
   price: number;
-  category: string;
+  categoryID: string;
   imageUrl: string;
   markedPrice?: number;
   visibility: boolean;
@@ -17,7 +17,7 @@ const FoodSchema = new mongoose.Schema<FoodType>(
     name: { type: String, required: true },
     description: { type: String, required: true },
     price: { type: Number, required: true },
-    category: { type: String, required: true },
+    categoryID: { type: String, required: true },
     imageUrl: { type: String, required: true },
     visibility: {
       type: Boolean,

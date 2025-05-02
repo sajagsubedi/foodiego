@@ -17,9 +17,10 @@ declare module "next-auth" {
       _id?: string;
       username?: string;
       isVerified?: boolean;
-      userRole?: UserRole;
+      userRole: UserRole;
     } & DefaultSession["user"];
   }
+  
   interface User {
     _id?: string;
     profilePicture?: {
@@ -27,7 +28,7 @@ declare module "next-auth" {
     };
     username?: string;
     isVerified?: boolean;
-    userRole?: UserRole;
+    userRole: UserRole;
   }
 }
 
