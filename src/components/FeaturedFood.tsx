@@ -1,4 +1,4 @@
-// components/PopularFoodItems.tsx
+// components/FeaturedFoodItems.tsx
 
 import Image from "next/image";
 import { Plus, Star } from "lucide-react";
@@ -13,7 +13,7 @@ interface FoodItem {
   fakedPrice?: number;
 }
 
-const PopularFoodItems: React.FC = () => {
+const FeaturedFoodItems: React.FC = () => {
   const foodItems: FoodItem[] = [
     {
       id: 1,
@@ -108,7 +108,7 @@ const PopularFoodItems: React.FC = () => {
       <div className=" w-full mb-5 flex flex-col items-center">
         <div className="h-1 w-20 bg-rose-500 rounded"></div>
         <h2 className="sm:text-3xl text-2xl font-bold title-font mb-2 text-rose-500 ">
-          POPULAR FOODS
+          Featured FOODS
         </h2>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -164,4 +164,4 @@ const PopularFoodItems: React.FC = () => {
   );
 };
 
-export default PopularFoodItems;
+export default FeaturedFoodItems;

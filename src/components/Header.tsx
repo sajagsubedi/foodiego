@@ -112,13 +112,13 @@ export default function Header() {
           />
         )}
         <button
-          className="text-2xl p-3 text-gray-400 md:hidden"
+          className="text-2xl p-2 text-gray-400 md:hidden"
           onClick={() => setNavActive(true)}
         >
           <Menu />
         </button>
       </div>
-      
+
       <CartModal cartState={isCartOpen} closeCart={closeCart} />
     </nav>
   );

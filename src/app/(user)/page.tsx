@@ -1,6 +1,6 @@
 import Categories from "@/components/Categories";
 import HeroSection from "@/components/HeroSection";
-import PopularFoodItems from "@/components/PopularFood";
+import FeaturedFoodItems from "@/components/FeaturedFood";
 import Testimonials from "@/components/Testimonials";
 
 export default function Home() {
@@ -8,7 +8,7 @@ export default function Home() {
     <>
       <HeroSection />
       <Categories />
-      <PopularFoodItems />
+      <FeaturedFoodItems />
       <Testimonials />
     </>
   );

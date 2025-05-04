@@ -1,6 +1,6 @@
 // app/(admin)/layout.tsx
 
-import DashboardSideBar from "@/components/DashboardSideBar";
+import DashboardSideBar from "@/components/dashboardComponents/DashboardSideBar";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default function DashboardLayout({
@@ -11,7 +11,7 @@ export default function DashboardLayout({
   return (
     <ProtectedRoute>
       <DashboardSideBar />
-      {children}
+      <main className="lg:pl-56 sm:pl-11">{children}</main>
     </ProtectedRoute>
   );
 }
