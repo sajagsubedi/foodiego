@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import UserDropDown from "../UserDropDown";
+import UserDropDown from "@/components/shared/UserDropDown";
 import { useSession } from "next-auth/react";
 import { Layers, Menu, UserIcon, Utensils } from "lucide-react";
 import { UserRole } from "@/types/user";

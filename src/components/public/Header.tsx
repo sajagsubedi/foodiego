@@ -4,7 +4,7 @@ import Link from "next/link";
 import { X, Menu, ShoppingCart } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import UserDropDown from "./UserDropDown";
+import UserDropDown from "../shared/UserDropDown";
 import CartModal from "./CartModal";
 import { useSession } from "next-auth/react";
 

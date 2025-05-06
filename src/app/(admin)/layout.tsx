@@ -1,7 +1,7 @@
 // app/(admin)/layout.tsx
 
-import DashboardSideBar from "@/components/dashboardComponents/DashboardSideBar";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import DashboardSideBar from "@/components/dashboard/DashboardSideBar";
+import DashboardGuard from "@/components/wrappers/DashboardGuard";
 
 export default function DashboardLayout({
   children,
@@ -9,9 +9,9 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ProtectedRoute>
+    <DashboardGuard>
       <DashboardSideBar />
-      <main className="lg:pl-56 sm:pl-11">{children}</main>
-    </ProtectedRoute>
+      <main className="lg:pl-56 sm:pl-11 bg-gray-50">{children}</main>
+    </DashboardGuard>
   );
 }

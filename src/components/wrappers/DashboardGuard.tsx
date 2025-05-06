@@ -4,13 +4,14 @@ import { UserRole } from "@/types/user";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React from "react";
+import LoadingPage from "@/components/shared/Loading";
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+const DashboardGuard = ({ children }: { children: React.ReactNode }) => {
   const { status, data: session } = useSession();
   const router = useRouter();
 
   if (status == "loading") {
-    return "Loading ...";
+    return <LoadingPage />;
   }
 
   if (status == "unauthenticated" || session?.user.UserRole == UserRole.USER) {
@@ -22,4 +23,4 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
 };
 
-export default ProtectedRoute;
+export default DashboardGuard;

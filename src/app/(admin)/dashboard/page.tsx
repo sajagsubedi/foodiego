@@ -7,13 +7,13 @@ import {
   recentOrdersData,
   monthlySummaryData,
 } from "@/data/mockData";
-import SummaryCard from "@/components/dashboardComponents/SummaryCard";
-import PieChart from "@/components/dashboardComponents/PieChart";
+import SummaryCard from "@/components/dashboard/SummaryCard";
+import PieChart from "@/components/dashboard/PieChart";
 import RecentOrdersTable, {
   OrderStatus,
-} from "@/components/dashboardComponents/RecentOrders";
-import MonthlySummary from "@/components/dashboardComponents/MonthlySummary";
-import LineChart from "@/components/dashboardComponents/LineChart";
+} from "@/components/dashboard/RecentOrders";
+import MonthlySummary from "@/components/dashboard/MonthlySummary";
+import LineChart from "@/components/dashboard/LineChart";
 
 const Dashboard: React.FC = () => {
   return (

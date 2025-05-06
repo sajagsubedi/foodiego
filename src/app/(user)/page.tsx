@@ -1,7 +1,7 @@
-import Categories from "@/components/Categories";
-import HeroSection from "@/components/HeroSection";
-import FeaturedFoodItems from "@/components/FeaturedFood";
-import Testimonials from "@/components/Testimonials";
+import Categories from "@/components/public/Categories";
+import HeroSection from "@/components/public/HeroSection";
+import FeaturedFoodItems from "@/components/public/FeaturedFood";
+import Testimonials from "@/components/public/Testimonials";
 
 export default function Home() {
   return (
