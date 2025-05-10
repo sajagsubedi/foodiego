@@ -4,7 +4,7 @@ import imagekit from "@/lib/imagekit";
 import CategoryModel from "@/models/category.model";
 import { UserRole } from "@/models/user.model";
 import { getServerSession, User } from "next-auth";
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
   await connectDb();
@@ -43,7 +43,7 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   await connectDb();
 
   const session = await getServerSession(authOptions);

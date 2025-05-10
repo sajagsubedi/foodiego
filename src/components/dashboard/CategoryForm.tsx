@@ -5,6 +5,7 @@ import { categorySchema, CategoryInput } from "@/schemas/categorySchema";
 import { Category } from "@/types/foods";
 import Image from "next/image";
 import { Plus } from "lucide-react";
+import Button from "../shared/Button";
 
 interface CategoryFormProps {
   defaultValues?: Partial<Category>;
@@ -118,20 +119,12 @@ export function CategoryForm({
       </div>
 
       <div className="flex justify-end gap-2 pt-2">
-        <button
-          type="button"
-          onClick={onCancel}
-          className="bg-white border-2 border-rose-600 transition-all transform hover:scale-105 outline-none py-2 px-5 font-bold rounded text-rose-500 flex items-center gap-2 max-w-max"
-        >
+        <Button variant="outline" onClick={onCancel}>
           Cancel
-        </button>
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="bg-rose-500 border-2 border-rose-500 transition-all transform hover:scale-105 outline-none py-2 px-5 font-bold rounded text-white flex items-center gap-2 max-w-max"
-        >
+        </Button>
+        <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Saving..." : "Save Category"}
-        </button>
+        </Button>
       </div>
     </form>
   );

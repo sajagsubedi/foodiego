@@ -1,10 +1,10 @@
 import UserModel from "@/models/user.model";
 import connectDb from "@/lib/connectDb";
 import { sendVerificationEmail } from "@/helpers/sendVerificationEmail";
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import imagekit from "@/lib/imagekit";
 
-export const POST = async (request: Request) => {
+export const POST = async (request: NextRequest) => {
   // Connect to the database
   await connectDb();
   try {
@@ -158,8 +158,6 @@ export const POST = async (request: Request) => {
         { status: 500 }
       );
     }
-    console.log("Email sent successfully:", emailResponse.message);
-
     // Return a success response
     return NextResponse.json(
       {

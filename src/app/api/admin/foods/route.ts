@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
   const session = await getServerSession(authOptions);
   const user = session?.user as User | null;
   if (!user || user.userRole !== UserRole.ADMIN) {
-    return Response.json(
+    return NextResponse.json(
       { success: false, message: "Unauthorized" },
       {
         status: 401,
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
     if (category) {
       const foodCategory = await CategoryModel.findOne({ slug: category });
       if (!foodCategory) {
-        return Response.json(
+        return NextResponse.json(
           { success: false, message: "Category not found" },
           {
             status: 404,
@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
 
     const foods = await FoodModel.aggregate(aggregationPipeline);
 
-    return Response.json(
+    return NextResponse.json(
       {
         success: true,
         data: foods,
@@ -83,7 +83,7 @@ export async function GET(request: NextRequest) {
     );
   } catch (error) {
     console.error("Error fetching foods:", error);
-    return Response.json(
+    return NextResponse.json(
       { success: false, message: "Failed to foods!" },
       {
         status: 500,
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions);
   const user = session?.user as User | null;
   if (!user || user.userRole !== UserRole.ADMIN) {
-    return Response.json(
+    return NextResponse.json(
       { success: false, message: "Unauthorized" },
       {
         status: 401,
@@ -131,7 +131,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!image) {
-      return Response.json(
+      return NextResponse.json(
         { success: false, message: "Image is required" },
         {
           status: 400,
@@ -144,7 +144,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!existingCategory) {
-      return Response.json(
+      return NextResponse.json(
         { success: false, message: "Category doesnot exists!" },
         {
           status: 400,
@@ -195,7 +195,7 @@ export async function POST(request: NextRequest) {
       },
     ]);
 
-    return Response.json(
+    return NextResponse.json(
       {
         success: true,
         message: "Food created successfully",
@@ -207,7 +207,7 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     console.error("Error creating food:", error);
-    return Response.json(
+    return NextResponse.json(
       { success: false, message: "Failed to create food!" },
       {
         status: 500,

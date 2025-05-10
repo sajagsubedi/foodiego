@@ -4,11 +4,11 @@ import imagekit from "@/lib/imagekit";
 import CategoryModel from "@/models/category.model";
 import { UserRole } from "@/models/user.model";
 import { getServerSession, User } from "next-auth";
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 export async function PUT(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   await connectDb();
 
@@ -29,9 +29,7 @@ export async function PUT(
     const slug = formData.get("slug") as string;
     const image = formData.get("image") as File | null;
 
-    const { id } = params;
-
-    console.log("ID", id);
+    const { id } = await params;
 
     const existingCategory = await CategoryModel.findById(id);
 

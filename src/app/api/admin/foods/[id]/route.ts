@@ -5,19 +5,19 @@ import CategoryModel from "@/models/category.model";
 import FoodModel from "@/models/food.model";
 import { UserRole } from "@/models/user.model";
 import { getServerSession, User } from "next-auth";
-import type { NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { Types } from "mongoose";
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   await connectDb();
 
   const session = await getServerSession(authOptions);
   const user = session?.user as User | null;
   if (!user || user.userRole !== UserRole.ADMIN) {
-    return Response.json(
+    return NextResponse.json(
       { success: false, message: "Unauthorized" },
       {
         status: 401,
@@ -41,7 +41,7 @@ export async function PUT(
     const existingFood = await FoodModel.findById(id);
 
     if (!existingFood) {
-      return Response.json(
+      return NextResponse.json(
         { success: false, message: "Food item not found" },
         { status: 404 }
       );
@@ -49,7 +49,7 @@ export async function PUT(
     if (categorySlug) {
       const category = await CategoryModel.findOne({ slug: categorySlug });
       if (!category) {
-        return Response.json(
+        return NextResponse.json(
           { success: false, message: "Category not found" },
           { status: 404 }
         );
@@ -85,7 +85,7 @@ export async function PUT(
 
     await existingFood.save();
 
-    return Response.json(
+    return NextResponse.json(
       {
         success: true,
         message: "Food updated successfully",
@@ -97,7 +97,7 @@ export async function PUT(
     );
   } catch (error) {
     console.error("Error updating food:", error);
-    return Response.json(
+    return NextResponse.json(
       { success: false, message: "Failed to update food!" },
       {
         status: 500,
@@ -108,14 +108,14 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   await connectDb();
 
   const session = await getServerSession(authOptions);
   const user = session?.user as User | null;
   if (!user || user.userRole !== UserRole.ADMIN) {
-    return Response.json(
+    return NextResponse.json(
       { success: false, message: "Unauthorized" },
       {
         status: 401,
@@ -127,7 +127,7 @@ export async function DELETE(
 
     const existingFood = await FoodModel.findById(id);
     if (!existingFood) {
-      return Response.json(
+      return NextResponse.json(
         { success: false, message: "Food item not found" },
         { status: 404 }
       );
@@ -136,7 +136,7 @@ export async function DELETE(
     const deletedFood = await FoodModel.findByIdAndDelete(id);
 
     if (!deletedFood) {
-      return Response.json({
+      return NextResponse.json({
         success: false,
         message: "Failed to delete food item",
       });
@@ -147,14 +147,14 @@ export async function DELETE(
       await imagekit.deleteFile(existingFood.image.fileId);
     }
 
-    return Response.json({
+    return NextResponse.json({
       success: true,
       message: "Food item deleted successfully",
       data: deletedFood,
     });
   } catch (error) {
     console.error("Error updating food:", error);
-    return Response.json(
+    return NextResponse.json(
       { success: false, message: "Failed to delete food!" },
       {
         status: 500,

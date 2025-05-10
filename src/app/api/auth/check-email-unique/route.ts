@@ -2,13 +2,13 @@ import { emailValidation } from "@/schemas/signUpSchema";
 import connectDb from "@/lib/connectDb";
 import UserModel from "@/models/user.model";
 import { z } from "zod";
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 const EmailQuerySchema = z.object({
   email: emailValidation,
 });
 
-export const GET = async (request: Request) => {
+export const GET = async (request: NextRequest) => {
   await connectDb();
   try {
     const { searchParams } = new URL(request.url);

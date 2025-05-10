@@ -1,11 +1,10 @@
 import connectDb from "@/lib/connectDb";
 import UserModel from "@/models/user.model";
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
-export const POST = async (request: Request) => {
+export const POST = async (request: NextRequest) => {
   await connectDb();
   try {
-    console.log("Verifying email...");
     const { username, verificationCode } = await request.json();
     const decodedUsername = decodeURIComponent(username);
     const user = await UserModel.findOne({ username: decodedUsername });
