@@ -189,7 +189,7 @@ export async function POST(request: NextRequest) {
       {
         $addFields: {
           category: {
-            $first: "category",
+            $first: "$category",
           },
         },
       },
