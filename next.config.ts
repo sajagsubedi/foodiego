@@ -17,10 +17,15 @@ const nextConfig: NextConfig = {
         hostname: "source.unsplash.com",
       },
       {
-        protocol:"https",
-        hostname:"ik.imagekit.io",
+        protocol: "https",
+        hostname: "ik.imagekit.io",
         port: "",
-      }
+      },
+      {
+        protocol: "https",
+        hostname: "images.pexels.com",
+        port: "",
+      },
     ],
   },
 };

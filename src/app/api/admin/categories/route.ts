@@ -23,7 +23,11 @@ export async function GET() {
   try {
     const categories = await CategoryModel.find({}).sort({ createdAt: -1 });
     return NextResponse.json(
-      { success: true, categories },
+      {
+        success: true,
+        data: categories,
+        message: "Categories fetched successfully!",
+      },
       {
         status: 200,
       }
@@ -128,4 +132,3 @@ export async function POST(request: Request) {
     );
   }
 }
-

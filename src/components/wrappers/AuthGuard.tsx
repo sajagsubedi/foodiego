@@ -3,14 +3,18 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React from "react";
-import LoadingPage from "@/components/shared/Loading";
+import Loader from "@/components/shared/Loader";
 
 const AuthGuard = ({ children }: { children: React.ReactNode }) => {
   const { status } = useSession();
   const router = useRouter();
 
   if (status == "loading") {
-    return <LoadingPage />;
+    return (
+      <div className="absolute z-[9999] w-screen h-screen flex items-center justify-center bg-white">
+        <Loader />
+      </div>
+    );
   }
 
   if (status == "unauthenticated") {

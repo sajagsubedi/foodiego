@@ -8,6 +8,7 @@ import { signInSchema } from "@/schemas/signInSchema";
 import { LoaderCircle } from "lucide-react";
 import { toast } from "react-toastify";
 import { z } from "zod";
+import Button from "@/components/shared/Button";
 
 export default function Page() {
   const {
@@ -79,14 +80,10 @@ export default function Page() {
               className="w-full bg-white rounded border border-gray-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
             />
           </div>
-          <button
-            type="submit"
-            className="text-white bg-rose-600 border-0 py-2 px-6 mt-5 gap-2 focus:outline-none w-full hover:bg-rose-700 rounded text- flex items-center justify-center"
-            disabled={isSubmitting}
-          >
+          <Button type="submit" disabled={isSubmitting} className="w-full">
             {isSubmitting && <LoaderCircle className="animate-spin text-lg" />}
             Signin
-          </button>
+          </Button>
         </form>
         <div className="mt-5 flex items-center gap-2 justify-center text-gray-500">
           <hr className="w-[175px] h-[2px] bg-gray-200" />

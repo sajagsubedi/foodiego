@@ -12,6 +12,7 @@ import { useDebounceValue } from "usehooks-ts";
 import { ApiResponse } from "@/types/ApiResponse";
 import axios, { AxiosError } from "axios";
 import Image from "next/image";
+import Button from "@/components/shared/Button";
 
 export default function Page() {
   const {
@@ -274,14 +275,10 @@ export default function Page() {
               <p className="text-red-500 text-sm">{errors.password.message}</p>
             )}
           </div>
-          <button
-            type="submit"
-            className="text-white bg-rose-600 border-0 py-2 px-6 mt-5 gap-2 focus:outline-none w-full hover:bg-rose-700 rounded text- flex items-center justify-center"
-            disabled={isSubmitting}
-          >
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting && <LoaderCircle className="animate-spin text-lg" />}
             Signup
-          </button>
+          </Button>
         </form>
         <div className="mt-5 flex items-center gap-2 justify-center text-gray-500">
           <hr className="w-[175px] h-[2px] bg-gray-200" />

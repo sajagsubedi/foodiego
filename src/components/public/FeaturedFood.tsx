@@ -108,7 +108,7 @@ const FeaturedFoodItems: React.FC = () => {
       <div className=" w-full mb-5 flex flex-col items-center">
         <div className="h-1 w-20 bg-rose-500 rounded"></div>
         <h2 className="sm:text-3xl text-2xl font-bold title-font mb-2 text-rose-500 ">
-          Featured FOODS
+          FEATURED FOODS
         </h2>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

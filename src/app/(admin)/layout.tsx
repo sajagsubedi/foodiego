@@ -11,7 +11,7 @@ export default function DashboardLayout({
   return (
     <DashboardGuard>
       <DashboardSideBar />
-      <main className="lg:pl-56 sm:pl-11 bg-gray-50">{children}</main>
+      <main className="lg:pl-56 sm:pl-14 bg-gray-50">{children}</main>
     </DashboardGuard>
   );
 }

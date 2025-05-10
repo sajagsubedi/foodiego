@@ -8,9 +8,9 @@ export function Dialog({ open, onClose, children }: DialogProps) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center overflow-x-hidden overflow-y-auto">
+    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center overflow-x-hidden p-20">
       <div
-        className="bg-white rounded-lg shadow-xl w-full max-w-md mx-auto p-6 animate-scale-in"
+        className="bg-white rounded-lg m-10 shadow-xl w-full max-w-md mx-auto px-4 py-2 animate-scale-in"
         onClick={(e) => e.stopPropagation()}
       >
         {children}
@@ -21,7 +21,11 @@ export function Dialog({ open, onClose, children }: DialogProps) {
 }
 
 export function DialogTitle({ children }: { children: React.ReactNode }) {
-  return <h2 className="text-xl font-semibold mb-4">{children}</h2>;
+  return (
+    <h2 className="text-xl font-semibold mb-4 text-center text-rose-500">
+      {children}
+    </h2>
+  );
 }
 
 export function DialogContent({ children }: { children: React.ReactNode }) {

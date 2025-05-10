@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React from "react";
+import Button from "../shared/Button";
 
 const HeroSection = () => {
   return (
@@ -23,13 +24,8 @@ const HeroSection = () => {
             are just a tap away—fresh, fast, and delivered to you in no time.
           </p>
           <div className="flex gap-4">
-            <button className="bg-white border-2 border-rose-500 text-rose-500 transition-all transform hover:scale-105 hover:bg-rose-100 font-bold py-2 px-4 rounded">
-              Explore Menu
-            </button>
-
-            <button className="bg-rose-500 hover:bg-rose-600 border-2 border-rose-500 transition-all transform hover:scale-105 text-white font-bold py-2 px-4 rounded">
-              Order Now
-            </button>
+            <Button variant="outline">Explore Menu</Button>
+            <Button>Order Now</Button>
           </div>
         </div>
         <div className="w-full md:w-1/2 flex justify-center items-center">

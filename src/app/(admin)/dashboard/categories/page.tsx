@@ -9,9 +9,12 @@ import { CategoryInput } from "@/schemas/categorySchema";
 import axios, { AxiosError } from "axios";
 import { ApiResponse } from "@/types/ApiResponse";
 import { toast } from "react-toastify";
+import Loader from "@/components/shared/Loader";
+import Button from "@/components/shared/Button";
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null
@@ -90,15 +93,22 @@ export default function CategoriesPage() {
   };
 
   const fetchCategories = async () => {
+    setLoading(true);
     try {
-      const response = await fetch("/api/admin/categories/");
-      if (!response.ok) {
-        throw new Error("Failed to fetch categories");
+      const response = await axios.get<ApiResponse>("/api/admin/categories");
+
+      if (response.data.success && Array.isArray(response.data.data)) {
+        setCategories(response.data.data as Category[]);
+      } else {
+        toast.error("Failed to load categories.");
       }
-      const data = await response.json();
-      setCategories(data.categories);
     } catch (error) {
-      console.log("Error fetching categories:", error);
+      const axiosError = error as AxiosError<ApiResponse>;
+      const errorMessage =
+        axiosError.response?.data?.message || "Error fetching categories.";
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -107,37 +117,41 @@ export default function CategoriesPage() {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 bg-transparent">
+    <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-10 bg-transparent">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-rose-500">CATEGORIES</h1>
-        <button
-          onClick={handleAddClick}
-          className="flex items-center gap-1.5 bg-rose-600 border-2 border-rose-600 transition-all transform hover:scale-105 outline-none py-2 px-5 font-bold rounded text-white max-w-max"
-        >
+        <Button onClick={handleAddClick}>
           <Plus size={18} />
           <span>Add Category</span>
-        </button>
+        </Button>
       </div>
+      {loading && (
+        <div className="flex items-center justify-center py-12 px-4 border-2 border-dashed border-gray-300 rounded-lg">
+          <Loader />
+        </div>
+      )}
+
+      {!loading && categories.length > 0 && (
+        <p className="text-lg text-gray-500 mb-4">
+          {categories.length} categories found
+        </p>
+      )}
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
-        {categories.map((category: Category) => (
-          <CategoryCard
-            key={category._id}
-            category={category}
-            onEdit={handleEditClick}
-          />
-        ))}
+        {!loading &&
+          categories.map((category: Category) => (
+            <CategoryCard
+              key={category._id}
+              category={category}
+              onEdit={handleEditClick}
+            />
+          ))}
       </div>
 
-      {categories.length === 0 && (
+      {!loading && categories.length === 0 && (
         <div className="flex flex-col items-center justify-center py-12 px-4 border-2 border-dashed border-gray-300 rounded-lg">
           <p className="text-lg text-gray-500 mb-4">No categories found</p>
-          <button
-            onClick={handleAddClick}
-            className="bg-rose-500 border-2 border-rose-500 transition-all transform hover:scale-105 outline-none py-2 px-5 font-bold rounded text-white flex items-center gap-2 max-w-max"
-          >
-            Add first food category
-          </button>
+          <Button onClick={handleAddClick}>Add first food category</Button>
         </div>
       )}
 

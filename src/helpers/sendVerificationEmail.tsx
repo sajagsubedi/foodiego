@@ -56,7 +56,7 @@ export const sendVerificationEmail = async (data: {
     `;
 
     const result = await transporter.sendMail({
-      from: `onboarding@resend.dev`,
+      from: `MS_DusZjD@test-q3enl6kk9o742vwr.mlsender.net`,
       to: data.email,
       subject: "Verify Your Email - Foodiego",
       html: emailHtml,
