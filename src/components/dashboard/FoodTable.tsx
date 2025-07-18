@@ -74,9 +74,9 @@ const FoodTable: React.FC<FoodTableProps> = ({
               </td>
             </tr>
           ) : (
-            foods.map((food) => (
+            foods.map((food, index) => (
               <FoodTableRow
-                key={food._id}
+                key={food._id || index}
                 food={food}
                 viewFood={viewFood}
                 onEdit={onEdit}

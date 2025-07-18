@@ -220,6 +220,7 @@ const FoodsPage = () => {
         toast.success(response.data.message);
         if (!selectedFood) {
           // Add new food to state
+          console.log("New food", response.data.data);
           setFoods((prev) => [...prev, response.data.data as Food]);
         } else {
           // Update existing food in state

@@ -3,6 +3,7 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 export function formatDate(date: string): string {
+  if (!date) return "N/A";
   return format(new Date(date), "MMM dd, yyyy");
 }
 

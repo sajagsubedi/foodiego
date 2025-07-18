@@ -2,97 +2,12 @@
 
 import Image from "next/image";
 import { Plus, Star } from "lucide-react";
+import { Food } from "@/types/foods";
+import { ApiResponse } from "@/types/ApiResponse";
+import { formatCurrency } from "@/lib/utils";
+import axios from "axios";
 
-interface FoodItem {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  rating: number;
-  imageUrl: string;
-  fakedPrice?: number;
-}
-
-const FeaturedFoodItems: React.FC = () => {
-  const foodItems: FoodItem[] = [
-    {
-      id: 1,
-      name: "Delicious Burger",
-      description: "Juicy patty, fresh toppings, special sauce.",
-      price: 12.99,
-      rating: 4.5,
-      imageUrl:
-        "https://res.cloudinary.com/dfhc8yteg/image/upload/v1743866683/Notice/hl9snhqhbplkm4od2qss.jpg",
-      fakedPrice: 15.99,
-    },
-    {
-      id: 2,
-      name: "Spicy Noodles",
-      description: "Hot and flavorful noodles with veggies.",
-      price: 10.5,
-      rating: 5,
-      imageUrl:
-        "https://res.cloudinary.com/dfhc8yteg/image/upload/v1743866683/Notice/hl9snhqhbplkm4od2qss.jpg",
-    },
-    {
-      id: 3,
-      name: "Veggie Pizza",
-      description: "Fresh veggies on a crispy crust.",
-      price: 15.0,
-      rating: 3.8,
-      imageUrl:
-        "https://res.cloudinary.com/dfhc8yteg/image/upload/v1743866683/Notice/hl9snhqhbplkm4od2qss.jpg",
-      fakedPrice: 18.0,
-    },
-    {
-      id: 4,
-      name: "Chicken Tacos",
-      description: "Spicy chicken, fresh salsa, and creamy avocado.",
-      price: 9.75,
-      rating: 4.2,
-      imageUrl:
-        "https://res.cloudinary.com/dfhc8yteg/image/upload/v1743866683/Notice/hl9snhqhbplkm4od2qss.jpg",
-    },
-    {
-      id: 5,
-      name: "Cheesy Pasta",
-      description: "Creamy cheese sauce with perfectly cooked pasta.",
-      price: 11.5,
-      rating: 4.7,
-      imageUrl:
-        "https://res.cloudinary.com/dfhc8yteg/image/upload/v1743866683/Notice/hl9snhqhbplkm4od2qss.jpg",
-      fakedPrice: 13.99,
-    },
-    {
-      id: 6,
-      name: "Grilled Sandwich",
-      description: "Toasted sandwich with grilled veggies and cheese.",
-      price: 7.99,
-      rating: 4.1,
-      imageUrl:
-        "https://res.cloudinary.com/dfhc8yteg/image/upload/v1743866683/Notice/hl9snhqhbplkm4od2qss.jpg",
-    },
-    {
-      id: 7,
-      name: "Crispy Fried Chicken",
-      description: "Golden crispy chicken with secret spices.",
-      price: 13.25,
-      rating: 4.6,
-      imageUrl:
-        "https://res.cloudinary.com/dfhc8yteg/image/upload/v1743866683/Notice/hl9snhqhbplkm4od2qss.jpg",
-      fakedPrice: 16.0,
-    },
-    {
-      id: 8,
-      name: "Sushi Platter",
-      description: "Assorted sushi rolls with fresh ingredients.",
-      price: 17.99,
-      rating: 4.9,
-      imageUrl:
-        "https://res.cloudinary.com/dfhc8yteg/image/upload/v1743866683/Notice/hl9snhqhbplkm4od2qss.jpg",
-    },
-  ];
-
+const FeaturedFoodItems: React.FC = async () => {
   const truncateDescription = (
     description: string,
     maxLength: number
@@ -103,6 +18,11 @@ const FeaturedFoodItems: React.FC = () => {
     return description.substring(0, maxLength - 3) + "...";
   };
 
+  const response = await axios.get<ApiResponse>(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/foods/featured`
+  );
+  const foodItems = response.data.data as Food[];
+
   return (
     <section className="flex flex-col items-center justify-center py-10 mt-10 px-[5vw]">
       <div className=" w-full mb-5 flex flex-col items-center">
@@ -112,14 +32,14 @@ const FeaturedFoodItems: React.FC = () => {
         </h2>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {foodItems.map((item) => (
+        {foodItems.map((item, index) => (
           <div
-            key={item.id}
+            key={item._id || index}
             className=" rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300"
           >
             <div className="relative w-full h-auto">
               <Image
-                src={item.imageUrl}
+                src={item.image.url}
                 alt={item.name}
                 width={500}
                 height={300}
@@ -135,25 +55,21 @@ const FeaturedFoodItems: React.FC = () => {
                 {[...Array(5)].map((_, index) => (
                   <Star
                     key={index}
-                    fill={
-                      index < Math.floor(item.rating) ? "currentColor" : "none"
-                    }
+                    fill={index < Math.floor(4.5) ? "currentColor" : "none"}
                     size={16}
                   />
                 ))}
-                <span className="ml-1 text-gray-600">
-                  ({item.rating.toFixed(1)})
-                </span>
+                <span className="ml-1 text-gray-600">4.5</span>
               </div>
               <p className="text-gray-600 mb-4 text-nowrap">
                 {truncateDescription(item.description, 40)}
               </p>
               <div className="flex justify-center gap-2 items-center">
                 <p className="text-gray-600 font-semibold line-through h-full text-lg flex items-center justify-center">
-                  {item.fakedPrice && `Rs${item.fakedPrice.toFixed(2)}`}
+                  {item.markedPrice && formatCurrency(item.markedPrice)}
                 </p>
                 <h4 className="font-bold text-2xl text-rose-700">
-                  Rs{item.price.toFixed(2)}
+                  {formatCurrency(item.price)}
                 </h4>
               </div>
             </div>

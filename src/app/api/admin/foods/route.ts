@@ -61,11 +61,6 @@ export async function GET(request: NextRequest) {
             $first: "$category",
           },
         },
-      },
-      {
-        $sort: {
-          createdAt: -1,
-        },
       }
     );
 
@@ -172,7 +167,7 @@ export async function POST(request: NextRequest) {
       image: uploadedImage,
     });
 
-    const createdFood = await FoodModel.aggregate([
+    const [createdFood] = await FoodModel.aggregate([
       {
         $match: {
           _id: newFood._id,
