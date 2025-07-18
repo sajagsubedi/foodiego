@@ -1,9 +1,15 @@
-import { categories } from "@/constants/Categories";
+import { ApiResponse } from "@/types/ApiResponse";
+import { Category } from "@/types/foods";
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const Categories = () => {
+const Categories = async () => {
+  const response = await axios.get<ApiResponse>(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/categories`
+  );
+  const categories = response.data.data as Category[];
   return (
     <section className="flex flex-col items-center justify-center py-8 sm:py-10 px-4 sm:px-[5vw]">
       <div className="w-full flex flex-col items-center mb-6 sm:mb-8">
@@ -17,7 +23,7 @@ const Categories = () => {
           <Link href={`/menu?category=${category.slug}`} key={category.slug}>
             <div className="flex flex-col items-center justify-center gap-2 p-2 hover:bg-rose-50 rounded-lg transition-all duration-300">
               <Image
-                src={category.image}
+                src={category.image.url}
                 alt={category.name}
                 width={40}
                 height={40}

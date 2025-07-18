@@ -21,7 +21,7 @@ export async function GET() {
   }
 
   try {
-    const categories = await CategoryModel.find({}).sort({ createdAt: -1 });
+    const categories = await CategoryModel.find({});
     return NextResponse.json(
       {
         success: true,
