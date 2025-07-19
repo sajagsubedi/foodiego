@@ -13,6 +13,15 @@ export function formatCurrency(amount: number): string {
     currency: "NPR",
   }).format(amount);
 }
+export const truncateDescription = (
+  description: string,
+  maxLength: number
+): string => {
+  if (description.length <= maxLength) {
+    return description;
+  }
+  return description.substring(0, maxLength - 3) + "...";
+};
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

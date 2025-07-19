@@ -5,7 +5,9 @@ import connectDb from "@/lib/connectDb";
 export async function GET() {
   connectDb();
   try {
-    const foods = await FoodModel.find({ isFeatured: true }).limit(8).exec();
+    const foods = await FoodModel.find({ isFeatured: true, visibility: true })
+      .limit(8)
+      .exec();
 
     return NextResponse.json(
       {
