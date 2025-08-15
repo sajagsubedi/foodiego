@@ -5,7 +5,6 @@ import { X, Menu, ShoppingCart } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import UserDropDown from "../shared/UserDropDown";
-import CartModal from "./CartModal";
 import { useSession } from "next-auth/react";
 
 type NavLinkPropType = {
@@ -36,18 +35,10 @@ export default function Header() {
   const [userDropDown, setUserDropDown] = useState(false);
   const { data: session, status } = useSession();
 
-  const [isCartOpen, setIsCartOpen] = useState(false);
-
   const changeUserDropDown = (value: boolean) => {
     setUserDropDown(value);
   };
 
-  const openCart = () => {
-    setIsCartOpen(true);
-  };
-  const closeCart = () => {
-    setIsCartOpen(false);
-  };
   return (
     <nav className="bg-white flex items-center justify-between px-4 py-1 box-border gap-4 sticky top-0 h-20 z-[99] border-b-4 border-rose-500 md:px-[5vw]">
       <Link className="flex" href="/">
@@ -100,9 +91,12 @@ export default function Header() {
       </div>
 
       <div className="flex items-center gap-1">
-        <button className="text-black bg-rose-200 rounded-full p-2 mr-1">
-          <ShoppingCart onClick={openCart} />
-        </button>
+        <Link
+          href="/cart"
+          className="text-black bg-rose-200 rounded-full p-2 mr-1"
+        >
+          <ShoppingCart />
+        </Link>
 
         {status == "authenticated" && (
           <UserDropDown
@@ -118,8 +112,6 @@ export default function Header() {
           <Menu />
         </button>
       </div>
-
-      <CartModal cartState={isCartOpen} closeCart={closeCart} />
     </nav>
   );
 }

@@ -5,7 +5,7 @@ import { categorySchema, CategoryInput } from "@/schemas/categorySchema";
 import { Category } from "@/types/foods";
 import Image from "next/image";
 import { Plus } from "lucide-react";
-import Button from "../shared/Button";
+import Button from "@/components/shared/Button";
 
 interface CategoryFormProps {
   defaultValues?: Partial<Category>;

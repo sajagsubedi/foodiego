@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
-import { CategoryCard } from "@/components/dashboard/CategoryCard";
+import { CategoryCard } from "@/components/dashboard/cards/CategoryCard";
 import { Category } from "@/types/foods";
-import { CategoryDialog } from "@/components/dashboard/CategoryDialog";
+import { CategoryDialog } from "@/components/dashboard/modals/CategoryModal";
 import { CategoryInput } from "@/schemas/categorySchema";
 import axios, { AxiosError } from "axios";
 import { ApiResponse } from "@/types/ApiResponse";

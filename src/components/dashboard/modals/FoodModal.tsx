@@ -2,7 +2,7 @@ import React from "react";
 import { Category, Food } from "@/types/foods";
 import { FoodSchemaType } from "@/schemas/foodSchema";
 import { Dialog, DialogTitle, DialogContent } from "@/components/shared/Dailog";
-import FoodModalForm from "@/components/dashboard/FoodModalForm";
+import FoodModalForm from "@/components/dashboard//forms/FoodModalForm";
 
 interface FoodModalProps {
   isOpen: boolean;

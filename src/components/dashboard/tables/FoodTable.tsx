@@ -1,6 +1,6 @@
 import React from "react";
 import { Food } from "@/types/foods";
-import FoodTableRow from "@/components/dashboard/FoodTableRow";
+import FoodTableRow from "@/components/dashboard/tables/FoodTableRow";
 
 interface FoodTableProps {
   foods: Food[];

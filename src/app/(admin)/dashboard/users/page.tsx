@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Loader from "@/components/shared/Loader";
 import { User } from "@/types/user";
-import UserTable from "@/components/dashboard/UsersTable";
+import UserTable from "@/components/dashboard//tables/UsersTable";
 import axios, { AxiosError } from "axios";
 import { ApiResponse } from "@/types/ApiResponse";
 import { toast } from "react-toastify";

@@ -1,5 +1,5 @@
 import React from "react";
-import { CategoryForm } from "@/components/dashboard/CategoryForm";
+import { CategoryForm } from "@/components/dashboard/forms/CategoryForm";
 import { CategoryInput } from "@/schemas/categorySchema";
 import { Category } from "@/types/foods";
 import { Dialog, DialogContent, DialogTitle } from "@/components/shared/Dailog";

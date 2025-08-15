@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Category, Food } from "@/types/foods";
 import { foodSchema, FoodSchemaType } from "@/schemas/foodSchema";
-import Button from "../shared/Button";
+import Button from "@/components/shared/Button";
 import { Eye, EyeClosed, Pin, PinOff, Plus } from "lucide-react";
 import Image from "next/image";
 
