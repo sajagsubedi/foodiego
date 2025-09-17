@@ -11,8 +11,8 @@ import SummaryCard from "@/components/dashboard/cards/SummaryCard";
 import PieChart from "@/components/dashboard/charts/PieChart";
 import RecentOrdersTable, {
   OrderStatus,
-} from "@/components/dashboard/RecentOrders";
-import MonthlySummary from "@/components/dashboard/MonthlySummary";
+} from "@/components/dashboard/general/RecentOrders";
+import MonthlySummary from "@/components/dashboard/general/MonthlySummary";
 import LineChart from "@/components/dashboard/charts/LineChart";
 
 const Dashboard: React.FC = () => {

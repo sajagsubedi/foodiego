@@ -1,16 +1,12 @@
-import { create } from 'zustand';
-
-export interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  imageUrl: string;
-  quantity: number;
-}
+import { ExtendedApiResponse } from "@/types/ApiResponse";
+import { CartItem, CartResponse } from "@/types/cart";
+import axios from "axios";
+import { create } from "zustand";
 
 interface CartStore {
   items: CartItem[];
-  addItem: (item: Omit<CartItem, 'quantity'>) => void;
+  fetchDefaultCart: () => Promise<void>;
+  addItem: (id: string) => Promise<void>;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
@@ -19,52 +15,33 @@ interface CartStore {
 }
 
 export const useCartStore = create<CartStore>((set, get) => ({
-  items: [
-    {
-      id: '1',
-      name: 'Delicious Burger',
-      price: 250,
-      imageUrl: 'https://res.cloudinary.com/dfhc8yteg/image/upload/v1743866683/Notice/hl9snhqhbplkm4od2qss.jpg',
-      quantity: 1,
-    },
-    {
-      id: '2',
-      name: 'Crispy Fries',
-      price: 150,
-      imageUrl: 'https://images.pexels.com/photos/1583884/pexels-photo-1583884.jpeg',
-      quantity: 2,
-    },
-  ],
-
-  addItem: (newItem) =>
+  items: [],
+  fetchDefaultCart: async () => {
+    try {
+      const response = await axios.get<ExtendedApiResponse<CartResponse>>(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/cart`
+      );
+      console.log(response.data);
+      set({ items: response.data.data.items });
+    } catch (err) {
+      console.log("Error fetching cart", err);
+    }
+  },
+  addItem: async (id) => {
+    console.log(id);
     set((state) => {
-      const existingItem = state.items.find((item) => item.id === newItem.id);
-      if (existingItem) {
-        return {
-          items: state.items.map((item) =>
-            item.id === newItem.id
-              ? { ...item, quantity: item.quantity + 1 }
-              : item
-          ),
-        };
-      }
-      return {
-        items: [...state.items, { ...newItem, quantity: 1 }],
-      };
-    }),
+      console.log("Current state", state);
+      return state;
+      //update state
+    });
+  },
 
-  removeItem: (id) =>
-    set((state) => ({
-      items: state.items.filter((item) => item.id !== id),
-    })),
-
-  updateQuantity: (id, quantity) =>
-    set((state) => ({
-      items: state.items.map((item) =>
-        item.id === id ? { ...item, quantity: Math.max(0, quantity) } : item
-      ),
-    })),
-
+  removeItem: (id) => {
+    console.log("Remove item with id ", id);
+  },
+  updateQuantity: (id, quantity) => {
+    console.log("Update ", id, ": ", quantity);
+  },
   clearCart: () => set({ items: [] }),
 
   getTotalItems: () => {

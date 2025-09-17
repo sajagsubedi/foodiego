@@ -1,6 +1,6 @@
 // app/(admin)/layout.tsx
 
-import DashboardSideBar from "@/components/dashboard/DashboardSideBar";
+import DashboardSideBar from "@/components/dashboard/general/DashboardSideBar";
 import DashboardGuard from "@/components/wrappers/DashboardGuard";
 
 export default function DashboardLayout({
