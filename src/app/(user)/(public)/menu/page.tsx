@@ -1,13 +1,12 @@
 "use client";
 
 import FoodCard from "@/components/public/FoodCard";
-import { ApiResponse } from "@/types/ApiResponse";
-import { Category, Food } from "@/types/foods";
-import axios, { AxiosError } from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState, useCallback } from "react";
+import { Suspense } from "react";
+import { useUserCategories } from "@/hooks/user/useUserCategories";
+import { useUserFoods } from "@/hooks/user/useUserFoods";
 
 export default function MenuPage() {
   return (
@@ -28,43 +27,8 @@ export default function MenuPage() {
 function MenuContent() {
   const searchParams = useSearchParams();
   const currentCategory = searchParams.get("category");
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [foodItems, setFoodItems] = useState<Food[]>([]);
-
-  const fetchCategories = async () => {
-    try {
-      const response = await axios.get<ApiResponse>(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/categories`
-      );
-      setCategories(response.data.data as Category[]);
-    } catch (error) {
-      const axiosError = error as AxiosError<ApiResponse>;
-      const errorMessage =
-        axiosError.response?.data?.message || "Error fetching categories.";
-      console.log(errorMessage);
-    }
-  };
-
-  const fetchFoodItems = useCallback(async () => {
-    try {
-      const response = await axios.get<ApiResponse>(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/foods?category=${currentCategory}`
-      );
-      setFoodItems(response.data.data as Food[]);
-    } catch (error) {
-      const axiosError = error as AxiosError<ApiResponse>;
-      const errorMessage =
-        axiosError.response?.data?.message || "Error fetching categories.";
-      console.log(errorMessage);
-    }
-  }, [currentCategory]);
-
-  useEffect(() => {
-    fetchCategories();
-    fetchFoodItems();
-  }, [fetchFoodItems]);
-
-
+  const { data: categories = [] } = useUserCategories();
+  const { data: foodItems = [] } = useUserFoods(currentCategory);
 
   return (
     <section>

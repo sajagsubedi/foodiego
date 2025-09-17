@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ChevronDown, ChevronUp, Plus } from "lucide-react";
 import Loader from "@/components/shared/Loader";
 import { Food, Category } from "@/types/foods";
@@ -9,22 +9,21 @@ import Button from "@/components/shared/Button";
 import FoodModal from "@/components/dashboard/modals/FoodModal";
 import ViewFoodModal from "@/components/shared/ViewFoodModal";
 import { FoodSchemaType } from "@/schemas/foodSchema";
-import axios, { AxiosError } from "axios";
-import { ApiResponse } from "@/types/ApiResponse";
 import { toast } from "react-toastify";
 import { usePathname, useRouter } from "next/navigation";
 import DeleteModal from "@/components/shared/DeletedModal";
+import { useAdminFoods } from "@/hooks/admin/useAdminFoods";
+import { useAdminCategories } from "@/hooks/admin/useAdminCategories";
 
 const FoodsPage = () => {
-  const [foods, setFoods] = useState<Food[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const { data: foods = [], isLoading: foodsLoading, deleteFood, updateFood, createFood } = useAdminFoods(selectedCategory);
+  const { data: categories = [], isLoading: categoriesLoading } = useAdminCategories();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [selectedFood, setSelectedFood] = useState<Food | undefined>();
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   // Separate category extraction on mount
   useEffect(() => {
@@ -35,53 +34,6 @@ const FoodsPage = () => {
     }
   }, []);
 
-  // Fetch foods based on selectedCategory
-  useEffect(() => {
-    fetchFoods(selectedCategory);
-  }, [selectedCategory]);
-
-  // Always fetch categories on mount
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  const fetchFoods = async (category: string) => {
-    setLoading(true);
-    try {
-      let url = "/api/admin/foods";
-      if (category) url += `?category=${category}`;
-
-      const response = await axios.get<ApiResponse>(url);
-      if (response.data.success && Array.isArray(response.data.data)) {
-        setFoods(response.data.data as Food[]);
-      } else {
-        toast.error(response.data.message || "Failed to load foods.");
-      }
-    } catch (error) {
-      const axiosError = error as AxiosError<ApiResponse>;
-      toast.error(
-        axiosError.response?.data?.message || "Error fetching foods."
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchCategories = async () => {
-    try {
-      const response = await axios.get<ApiResponse>("/api/admin/categories");
-      if (response.data.success && Array.isArray(response.data.data)) {
-        setCategories(response.data.data as Category[]);
-      } else {
-        toast.error(response.data.message || "Failed to load categories.");
-      }
-    } catch (error) {
-      const axiosError = error as AxiosError<ApiResponse>;
-      toast.error(
-        axiosError.response?.data?.message || "Error fetching categories."
-      );
-    }
-  };
 
   const handleAddNewClick = () => {
     setSelectedFood(undefined);
@@ -100,28 +52,15 @@ const FoodsPage = () => {
 
   const handleDeleteFood = async () => {
     setIsDeleting(true);
-    try {
-      const response = await axios.delete(
-        `/api/admin/foods/${selectedFood?._id}`
-      );
-      if (response.data.success) {
-        const updatedFoods = foods.filter(
-          (food) => food._id !== selectedFood?._id
-        );
-        setFoods(updatedFoods);
-      } else {
-        toast.error(response.data.message || "Failed to delete food.");
-      }
-    } catch (error) {
-      const axiosError = error as AxiosError<ApiResponse>;
-      toast.error(
-        axiosError.response?.data?.message || "Error deleting food!."
-      );
-    } finally {
-      setIsDeleting(false);
-      setDeleteModal(false);
-      setSelectedFood(undefined);
-    }
+    await deleteFood
+      .mutateAsync(selectedFood?._id as string)
+      .then(() => toast.success("Food deleted"))
+      .catch((e: unknown) => toast.error(e instanceof Error ? e.message : "Delete failed"))
+      .finally(() => {
+        setIsDeleting(false);
+        setDeleteModal(false);
+        setSelectedFood(undefined);
+      });
   };
 
   const cancelDeleteFood = () => {
@@ -130,38 +69,12 @@ const FoodsPage = () => {
   };
 
   const handleToggleVisibility = async (id: string, visibility: boolean) => {
-    try {
-      const updatedFoods = foods.map((food) =>
-        food._id === id ? { ...food, visibility } : food
-      );
-      setFoods(updatedFoods);
-
-      const formData = new FormData();
-      formData.append("visibility", String(visibility));
-
-      const response = await axios.put(`/api/admin/foods/${id}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      if (!response.data.success) {
-        const updatedFoods = foods.map((food) =>
-          food._id === id ? { ...food, visibility: !visibility } : food
-        );
-        setFoods(updatedFoods);
-        toast.error(
-          response.data.message || "Failed to update food visibility."
-        );
-      }
-    } catch (error) {
-      const updatedFoods = foods.map((food) =>
-        food._id === id ? { ...food, visibility: !visibility } : food
-      );
-      setFoods(updatedFoods);
-      const axiosError = error as AxiosError<ApiResponse>;
-      toast.error(
-        axiosError.response?.data?.message || "Error changing visibility."
-      );
-    }
+    const formData = new FormData();
+    formData.append("visibility", String(visibility));
+    await updateFood
+      .mutateAsync({ id, payload: formData })
+      .then(() => toast.success("Visibility updated"))
+      .catch((e: unknown) => toast.error(e instanceof Error ? e.message : "Update failed"));
   };
 
   const viewFood = (food: Food) => {
@@ -175,7 +88,6 @@ const FoodsPage = () => {
   };
 
   const handleSubmitFood = async (values: FoodSchemaType) => {
-    try {
       const {
         name,
         image,
@@ -202,47 +114,18 @@ const FoodsPage = () => {
       if (categorySlug) formData.append("categorySlug", categorySlug);
       if (image) formData.append("image", image);
 
-      let response;
-
       if (!selectedFood) {
-        response = await axios.post<ApiResponse>("/api/admin/foods", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+        await createFood
+          .mutateAsync(formData)
+          .then((res) => toast.success(res.message || "Food created"))
+          .catch((e: unknown) => toast.error(e instanceof Error ? e.message : "Create failed"));
       } else {
-        response = await axios.put<ApiResponse>(
-          `/api/admin/foods/${selectedFood._id}`,
-          formData,
-          { headers: { "Content-Type": "multipart/form-data" } }
-        );
+        await updateFood
+          .mutateAsync({ id: selectedFood._id, payload: formData })
+          .then((res) => toast.success(res.message || "Food updated"))
+          .catch((e: unknown) => toast.error(e instanceof Error ? e.message : "Update failed"));
       }
-
-      if (response.data.success) {
-        toast.success(response.data.message);
-        if (!selectedFood) {
-          // Add new food to state
-          console.log("New food", response.data.data);
-          setFoods((prev) => [...prev, response.data.data as Food]);
-        } else {
-          // Update existing food in state
-          setFoods((prev) =>
-            prev.map((food) =>
-              food._id === selectedFood._id
-                ? (response.data.data as Food)
-                : food
-            )
-          );
-        }
-        closeFoodModal();
-      } else {
-        toast.error(response.data.message || "Error saving food.");
-      }
-    } catch (error) {
-      const axiosError = error as AxiosError<ApiResponse>;
-      const errorMessage =
-        axiosError.response?.data?.message ||
-        "There was a problem saving the food. Please try again.";
-      toast.error(errorMessage);
-    }
+      closeFoodModal();
   };
 
   const router = useRouter();
@@ -318,7 +201,7 @@ const FoodsPage = () => {
         </div>
       </div>
 
-      {loading ? (
+      {foodsLoading || categoriesLoading ? (
         <div className="flex items-center justify-center py-12 px-4 border-2 border-dashed border-gray-300 rounded-lg">
           <Loader />
         </div>

@@ -1,44 +1,18 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Loader from "@/components/shared/Loader";
 import { User } from "@/types/user";
 import UserTable from "@/components/dashboard//tables/UsersTable";
-import axios, { AxiosError } from "axios";
-import { ApiResponse } from "@/types/ApiResponse";
 import { toast } from "react-toastify";
 import DeleteModal from "@/components/shared/DeletedModal";
+import { useAdminUsers } from "@/hooks/admin/useAdminUsers";
 
 const UsersPage = () => {
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(false);
+  const { data: users = [], isLoading, deleteUser } = useAdminUsers();
   const [deleteModal, setDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | undefined>();
-
-  // Fetch users on mount
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  const fetchUsers = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get<ApiResponse>("/api/admin/users");
-      if (response.data.success && Array.isArray(response.data.data)) {
-        setUsers(response.data.data as User[]);
-      } else {
-        toast.error(response.data.message || "Failed to load users.");
-      }
-    } catch (error) {
-      const axiosError = error as AxiosError<ApiResponse>;
-      toast.error(
-        axiosError.response?.data?.message || "Error fetching users."
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleEditUser = (user: User) => {
     console.log("Edit user", user);
@@ -50,27 +24,17 @@ const UsersPage = () => {
   };
 
   const handleDeleteUser = async () => {
+    if (!selectedUser) return;
     setIsDeleting(true);
-    try {
-      const response = await axios.delete(
-        `/api/admin/users/${selectedUser?._id}`
-      );
-      if (response.data.success) {
-        const updatedUsers = users.filter(
-          (user) => user._id !== selectedUser?._id
-        );
-        setUsers(updatedUsers);
-      } else {
-        toast.error(response.data.message || "Failed to delete user.");
-      }
-    } catch (error) {
-      const axiosError = error as AxiosError<ApiResponse>;
-      toast.error(axiosError.response?.data?.message || "Error deleting user.");
-    } finally {
-      setIsDeleting(false);
-      setDeleteModal(false);
-      setSelectedUser(undefined);
-    }
+    await deleteUser
+      .mutateAsync(selectedUser._id)
+      .then(() => toast.success("User deleted"))
+      .catch((e: unknown) => toast.error(e instanceof Error ? e.message : "Delete failed"))
+      .finally(() => {
+        setIsDeleting(false);
+        setDeleteModal(false);
+        setSelectedUser(undefined);
+      });
   };
 
   const cancelDeleteUser = () => {
@@ -90,7 +54,7 @@ const UsersPage = () => {
         </h1>
       </div>
 
-      {loading ? (
+      {isLoading ? (
         <div className="flex items-center justify-center py-12 px-4 border-2 border-dashed border-gray-300 rounded-lg">
           <Loader />
         </div>
