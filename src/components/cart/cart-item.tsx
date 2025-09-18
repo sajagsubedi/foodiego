@@ -2,81 +2,91 @@
 
 import React from "react";
 import Image from "next/image";
+import { CartItem as CartItemType } from "@/types/cart";
+import { useCartStore } from "@/lib/store/cart-store";
 import { Minus, Plus, Trash2 } from "lucide-react";
-import { useCartStore, type CartItem as CartItemType } from "@/lib/store/cart-store";
 
 interface CartItemProps {
   item: CartItemType;
 }
 
 export function CartItem({ item }: CartItemProps) {
-  const { updateQuantity, removeItem } = useCartStore();
+  const { updateQuantity, removeItem, isLoading } = useCartStore();
 
-  const increment = () => updateQuantity(item.id, item.quantity + 1);
-  const decrement = () => updateQuantity(item.id, Math.max(1, item.quantity - 1));
-  const handleRemove = () => removeItem(item.id);
+  const handleQuantityChange = (newQuantity: number) => {
+    if (newQuantity >= 1) {
+      updateQuantity(item.foodId, newQuantity);
+    }
+  };
+
+  const handleRemove = () => {
+    removeItem(item.foodId);
+  };
+
+  if (!item.food) {
+    return null;
+  }
 
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-rose-200 group">
-      <div className="flex items-center gap-6">
-        {/* Product Image */}
-        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-rose-50 to-orange-50 p-3 group-hover:scale-105 transition-transform duration-300">
-          <Image
-            src={item.imageUrl}
-            alt={item.name}
-            width={80}
-            height={80}
-            className="rounded-lg object-cover shadow-sm"
-          />
-        </div>
-
-        {/* Product Details */}
-        <div className="flex-1 space-y-2">
-          <h3 className="text-xl font-bold text-gray-900 leading-tight group-hover:text-rose-600 transition-colors">
-            {item.name}
-          </h3>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="font-semibold text-gray-700">NPR {item.price}</span>
-            <span className="text-gray-400">×</span>
-            <span className="font-semibold text-gray-700">{item.quantity}</span>
-            <span className="text-gray-400">=</span>
-            <span className="font-bold text-rose-600 text-lg">
-              NPR {item.price * item.quantity}
-            </span>
-          </div>
-        </div>
-
-        {/* Quantity Controls */}
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 bg-gray-50 rounded-full p-1 border border-gray-200">
-            <button
-              onClick={decrement}
-              className="h-10 w-10 rounded-full bg-white hover:bg-rose-50 hover:text-rose-600 transition-all duration-200 flex items-center justify-center shadow-sm border border-gray-200 hover:border-rose-300"
-            >
-              <Minus className="w-4 h-4" />
-            </button>
-
-            <span className="min-w-[40px] text-center font-bold text-gray-900 text-lg">
-              {item.quantity}
-            </span>
-
-            <button
-              onClick={increment}
-              className="h-10 w-10 rounded-full bg-white hover:bg-rose-50 hover:text-rose-600 transition-all duration-200 flex items-center justify-center shadow-sm border border-gray-200 hover:border-rose-300"
-            >
-              <Plus className="w-4 h-4" />
-            </button>
-          </div>
-
-          {/* Remove Button */}
-          <button
-            onClick={handleRemove}
-            className="h-12 w-12 rounded-full bg-red-50 hover:bg-red-100 text-red-500 hover:text-red-600 transition-all duration-200 flex items-center justify-center group/delete hover:scale-110"
-          >
-            <Trash2 className="w-5 h-5 group-hover/delete:scale-110 transition-transform" />
-          </button>
-        </div>
+    <div className="flex items-center gap-4 bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200">
+      {/* Food Image */}
+      <div className="relative w-20 h-20 flex-shrink-0">
+        <Image
+          src={item.food.image.url}
+          alt={item.food.name}
+          fill
+          className="rounded-lg object-cover"
+        />
       </div>
+
+      {/* Food Details */}
+      <div className="flex-1 min-w-0">
+        <h3 className="font-semibold text-gray-900 text-lg truncate">
+          {item.food.name}
+        </h3>
+        <p className="text-rose-500 font-bold text-lg">
+          Rs. {item.food.price.toFixed(2)}
+        </p>
+      </div>
+
+      {/* Quantity Controls */}
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => handleQuantityChange(item.quantity - 1)}
+          disabled={isLoading || item.quantity <= 1}
+          className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <Minus className="w-4 h-4" />
+        </button>
+
+        <span className="w-8 text-center font-semibold text-gray-900">
+          {item.quantity}
+        </span>
+
+        <button
+          onClick={() => handleQuantityChange(item.quantity + 1)}
+          disabled={isLoading}
+          className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <Plus className="w-4 h-4" />
+        </button>
+      </div>
+
+      {/* Subtotal */}
+      <div className="text-right">
+        <p className="font-bold text-gray-900 text-lg">
+          Rs. {(item.food.price * item.quantity).toFixed(2)}
+        </p>
+      </div>
+
+      {/* Remove Button */}
+      <button
+        onClick={handleRemove}
+        disabled={isLoading}
+        className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <Trash2 className="w-5 h-5" />
+      </button>
     </div>
   );
 }

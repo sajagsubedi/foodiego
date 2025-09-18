@@ -2,63 +2,88 @@
 
 import React from "react";
 import { useCartStore } from "@/lib/store/cart-store";
-import { ShoppingBag, Shield } from "lucide-react";
+import { ShoppingBag, CreditCard } from "lucide-react";
 
 export function CartSummary() {
-  const { getTotalPrice, getTotalItems } = useCartStore();
-  
+  const { 
+    items, 
+    getTotalItems, 
+    getTotalPrice, 
+    clearCart, 
+    isLoading 
+  } = useCartStore();
+
   const subtotal = getTotalPrice();
   const deliveryFee = 200;
   const total = subtotal + deliveryFee;
-  const itemCount = getTotalItems();
+
+  const handleCheckout = () => {
+    // TODO: Implement checkout functionality
+    console.log("Proceeding to checkout...");
+  };
+
+  const handleClearCart = () => {
+    if (window.confirm("Are you sure you want to clear your cart?")) {
+      clearCart();
+    }
+  };
+
+  if (items.length === 0) {
+    return (
+      <div className="w-full lg:w-80 bg-white rounded-xl p-6 shadow-sm border border-gray-100 h-fit">
+        <div className="text-center py-8">
+          <ShoppingBag className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+          <p className="text-gray-500 text-lg">Your cart is empty</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="w-full md:w-96 bg-gradient-to-br from-white via-rose-50/30 to-orange-50/30 rounded-2xl shadow-2xl border border-white/50 backdrop-blur-sm">
-      <div className="p-8 space-y-6">
-        {/* Header */}
-        <div className="text-center border-b border-gray-200 pb-6">
-          <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-rose-500 to-pink-600 rounded-2xl mb-4 shadow-lg">
-            <ShoppingBag className="w-7 h-7 text-white" />
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Order Summary</h2>
-          <p className="text-sm text-gray-600 font-medium">
-            {itemCount} {itemCount === 1 ? 'item' : 'items'} in your cart
-          </p>
+    <div className="w-full lg:w-80 bg-white rounded-xl p-6 shadow-sm border border-gray-100 h-fit">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="p-2 bg-rose-100 rounded-lg">
+          <ShoppingBag className="w-5 h-5 text-rose-600" />
         </div>
+        <h2 className="text-xl font-bold text-gray-900">Order Summary</h2>
+      </div>
 
-        {/* Price Breakdown */}
-        <div className="space-y-4">
-          <div className="flex justify-between items-center py-2">
-            <span className="text-gray-700 font-medium">Subtotal</span>
-            <span className="font-bold text-gray-900 text-lg">
-              NPR {subtotal}
-            </span>
-          </div>
-          
-          <div className="flex justify-between items-center py-2">
-            <span className="text-gray-700 font-medium">Delivery Fee</span>
-            <span className="text-gray-900 font-semibold">NPR {deliveryFee}</span>
-          </div>
-
-          <div className="border-t border-gray-200 pt-4">
-            <div className="flex justify-between items-center">
-              <span className="text-xl font-bold text-gray-900">Total</span>
-              <span className="text-2xl font-bold text-rose-600">NPR {total}</span>
-            </div>
+      <div className="space-y-4 mb-6">
+        <div className="flex justify-between items-center">
+          <span className="text-gray-600">Items ({getTotalItems()})</span>
+          <span className="font-semibold text-gray-900">Rs.{subtotal.toFixed(2)}</span>
+        </div>
+        
+        <div className="flex justify-between items-center">
+          <span className="text-gray-600">Delivery Fee</span>
+          <span className="font-semibold text-gray-900">Rs.{deliveryFee.toFixed(2)}</span>
+        </div>
+        
+        <div className="border-t border-gray-200 pt-4">
+          <div className="flex justify-between items-center">
+            <span className="text-lg font-bold text-gray-900">Total</span>
+            <span className="text-xl font-bold text-rose-500">Rs.{total.toFixed(2)}</span>
           </div>
         </div>
+      </div>
 
-        {/* Checkout Button */}
-        <button className="w-full bg-gradient-to-r from-rose-500 via-rose-600 to-pink-600 hover:from-rose-600 hover:via-rose-700 hover:to-pink-700 text-white font-bold py-4 px-6 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3">
-          <ShoppingBag className="w-5 h-5" />
+      <div className="space-y-3">
+        <button
+          onClick={handleCheckout}
+          disabled={isLoading}
+          className="w-full bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
+        >
+          <CreditCard className="w-5 h-5" />
           Proceed to Checkout
         </button>
-
-        {/* Security Badge */}
-        <div className="flex items-center justify-center gap-2 text-xs text-gray-500 bg-gray-50 rounded-lg p-3 border border-gray-200">
-          <Shield className="w-4 h-4 text-green-600" />
-          <span className="font-medium">Secure checkout with 256-bit SSL encryption</span>
-        </div>
+        
+        <button
+          onClick={handleClearCart}
+          disabled={isLoading}
+          className="w-full text-gray-500 hover:text-red-500 font-medium py-2 px-4 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Clear Cart
+        </button>
       </div>
     </div>
   );

@@ -4,14 +4,15 @@ import React, { useEffect } from "react";
 import { useCartStore } from "@/lib/store/cart-store";
 import { CartItem } from "@/components/cart/cart-item";
 import { CartSummary } from "@/components/cart/cart-summary";
-import { ShoppingCart, Package, Heart } from "lucide-react";
+import { ShoppingCart, Package, Heart, Loader2 } from "lucide-react";
+import Link from "next/link";
 
 export default function CartPage() {
-  const { items, fetchDefaultCart } = useCartStore();
+  const { items, fetchCart, isLoading } = useCartStore();
 
   useEffect(() => {
-    fetchDefaultCart();
-  }, []);
+    fetchCart();
+  }, [fetchCart]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-orange-50">
@@ -49,7 +50,11 @@ export default function CartPage() {
                   </div>
                 </div>
 
-                {items.length === 0 ? (
+                {isLoading ? (
+                  <div className="flex items-center justify-center py-20">
+                    <Loader2 className="w-8 h-8 animate-spin text-rose-500" />
+                  </div>
+                ) : items.length === 0 ? (
                   <div className="text-center py-20">
                     <div className="w-32 h-32 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
                       <ShoppingCart className="w-16 h-16 text-gray-400" />
@@ -58,18 +63,20 @@ export default function CartPage() {
                       Your cart is empty
                     </h3>
                     <p className="text-gray-600 text-lg mb-6 max-w-sm mx-auto">
-                      Looks like you havent added any delicious items to your
+                      Looks like you haven&apos;t added any delicious items to your
                       cart yet!
                     </p>
-                    <button className="inline-flex items-center gap-2 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                      <Heart className="w-5 h-5" />
-                      Start Shopping
-                    </button>
+                    <Link href="/menu">
+                      <button className="inline-flex items-center gap-2 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                        <Heart className="w-5 h-5" />
+                        Start Shopping
+                      </button>
+                    </Link>
                   </div>
                 ) : (
                   <div className="space-y-6">
                     {items.map((item) => (
-                      <CartItem key={item.id} item={item} />
+                      <CartItem key={item.foodId} item={item} />
                     ))}
                   </div>
                 )}
